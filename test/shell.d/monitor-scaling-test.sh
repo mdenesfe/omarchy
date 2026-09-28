@@ -37,6 +37,7 @@ LUA
 }
 
 run_scaling() {
+  : >|"$eval_out"
   HOME="$home_dir" \
     XDG_STATE_HOME="$home_dir/.local/state" \
     PATH="$stub_bin:$PATH" \
@@ -59,7 +60,6 @@ grep -Fx 'local omarchy_monitor_scale = 2' "$monitor_lua" >/dev/null || fail "mo
 pass "monitor scaling down recovers 3x to 2x"
 
 write_monitor_config
-: >|"$eval_out"
 OMARCHY_TEST_MONITOR_SCALE=3.0000000000000004 run_scaling down
 (( $(wc -l <"$eval_out") == 1 )) || fail "monitor scaling down emits exactly one monitor command"
 grep -Eq 'scale[[:space:]]*=[[:space:]]*2([[:space:],}]|$)' "$eval_out" ||
